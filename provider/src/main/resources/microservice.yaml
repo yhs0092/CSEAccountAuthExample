@@ -1,6 +1,6 @@
 APPLICATION_ID: CSEAccountAuthExample
 service_description:
-  name: account-service
+  name: provider-service
   version: 0.0.1
 #  environment: development
 servicecomb:
@@ -18,7 +18,7 @@ servicecomb:
     client:
       serverUri: https://cse.cn-north-1.myhuaweicloud.com:443
   rest:
-    address: 0.0.0.0:18081
+    address: 0.0.0.0:18082
   accesslog:
     enabled: true
 

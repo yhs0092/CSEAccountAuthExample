@@ -8,7 +8,11 @@ public class Account {
   String password;
 
   @JsonIgnore
-  SessionInfo sessionInfo;
+  SessionInfo sessionInfo = new SessionInfo();
+
+  public Account() {
+
+  }
 
   public Account(String userName, String password) {
     this.userName = userName;

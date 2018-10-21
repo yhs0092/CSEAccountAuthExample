@@ -2,38 +2,32 @@ package com.github.yhs0092.csedemo.account.service;
 
 import java.util.UUID;
 
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.servicecomb.swagger.invocation.exception.InvocationException;
+
 public class SessionInfo {
   private String sessionId;
-
-  private long refreshInterval;
 
   private long nextRefreshTime = System.currentTimeMillis();
 
   public SessionInfo() {
-    this(10_000L);
-  }
-
-  public SessionInfo(long refreshInterval) {
-    this.refreshInterval = refreshInterval;
     refreshSessionId();
   }
 
   public void refreshSessionId() {
-    nextRefreshTime += refreshInterval;
+    nextRefreshTime = System.currentTimeMillis() + SessionInfoConfig.getRefreshInterval();
     sessionId = UUID.randomUUID().toString();
   }
 
-  public boolean validateSessionId(String sessionId) {
-    return sessionId.equals(this.sessionId)
-        && (System.currentTimeMillis() < nextRefreshTime);
+  public void validateSessionId() {
+    if (SessionInfoConfig.isSessionTimeoutEnabled() && (System.currentTimeMillis() > nextRefreshTime)) {
+      throw new InvocationException(Status.UNAUTHORIZED, "session timeout");
+    }
   }
 
   public String getSessionId() {
     return sessionId;
-  }
-
-  public long getRefreshInterval() {
-    return refreshInterval;
   }
 
   public long getNextRefreshTime() {

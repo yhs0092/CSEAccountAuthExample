@@ -1,6 +1,6 @@
 APPLICATION_ID: CSEAccountAuthExample
 service_description:
-  name: account-service
+  name: edge
   version: 0.0.1
 #  environment: development
 servicecomb:
@@ -18,9 +18,24 @@ servicecomb:
     client:
       serverUri: https://cse.cn-north-1.myhuaweicloud.com:443
   rest:
-    address: 0.0.0.0:18081
+    address: 0.0.0.0:18080
+  handler:
+    chain:
+      Consumer:
+        default: auth,qps-flowcontrol-consumer,loadbalance,fault-injection-consumer,bizkeeper-consumer
+        service:
+          account-service: qps-flowcontrol-consumer,loadbalance,fault-injection-consumer,bizkeeper-consumer
   accesslog:
     enabled: true
+
+  http:
+    dispatcher:
+      edge:
+        default:
+          enabled: true
+          prefix: api
+          withVersion: true
+          prefixSegmentCount: 3
 
 # aksk
 #  credentials:
